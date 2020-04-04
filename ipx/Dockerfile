@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3-alpine
 ENV HTTP_PORT 8080
 ENV MQTT_PORT 1883
 ENV MQTT_HOST mqtt
