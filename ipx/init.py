@@ -31,13 +31,20 @@ brightness = form.getvalue("brightness")
 brightnessStr=""
 if brightness:
 	brightnessStr=str(brightness)
-#print("Id: "+str(idRelay)+" Nom: "+str(nameRelay)+" Dim: "+str(brightnessStr))
 if idRelay and nameRelay:
 	if re.match(r"^r[0-9]{2}$", idRelay) and not brightness or re.match(r"^d[0-9]c[0-9]$", idRelay) and brightness:
-		print("Id: "+str(idRelay)+" Nom: "+str(nameRelay)+" Dim: "+str(brightnessStr))
+		#print("Id: "+str(idRelay)+" Nom: "+str(nameRelay)+" Dim: "+str(brightnessStr))
 		topic = mqttTopic + "/light/" + idRelay + "/config"
-		playload = "{}" # TODO
-		print("topic: "+topic+" playload: "+playload)
+		playload = "{ \"~\": \"" + mqttTopic + "/light/" + idRelay + "\"" # TODO
+		playload += ", \"name\": \"" + str(nameRelay) + "\""
+		playload += ", \"unique_id\": \"" + idRelay + "_light\""
+		playload += ", \"command_topic\": \"~/set\""
+		playload += ", \"state_topic\": \"~/state\""
+		playload += ", \"schema\": \"json\""
+		if brightness:
+			playload += ", \"brightness\": true"
+		playload += " }"
+		print("topic: "+topic+"<br /> playload: "+playload+"<br />")
 		#publish(topic, playload)
 	else:
 		print("Erreur: l'id doit être de forme r01 pour les relais de l'IPX et X8R et d1c1 pour le XDimmer")
@@ -52,7 +59,7 @@ html = """<!DOCTYPE html>
 			<tr><td>Id: </td><td><input type="text" name="idRelay" value="Id relay" title="L'id doit être de forme r01 pour les relais de l'IPX et X8R et d1c1 pour le XDimmer" /></td></tr>
 			<tr><td>Nom: </td><td><input type="text" name="nameRelay" value="Nom du relay" /></td></tr>
 			<tr><td>Dimmable: </td><td><input type="checkbox" name="brightness" value="Dimmable" /></td></tr>
-			<tr><td>Envoyer information au serveur: </td><td><input type="submit" name="send" value="Envoyer"></td></tr>
+			<tr><td>Configurer MQTT: </td><td><input type="submit" name="send" value="Envoyer"></td></tr>
 		</table>
 	</form> 
 </body>
