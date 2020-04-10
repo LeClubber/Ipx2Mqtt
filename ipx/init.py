@@ -7,8 +7,9 @@ import cgitb
 import json
 import os
 import paho.mqtt.client as mqtt
-import paho.mqtt.subscribe as subscribe
+#import paho.mqtt.subscribe as subscribe
 import re
+from mqttd import Mqtt
 
 cgitb.enable()
 
@@ -53,7 +54,7 @@ elif idRelay and nameRelay:
 		print("Erreur: l'id doit être de forme r01 pour les relais de l'IPX et X8R et d1c1 pour le XDimmer")
 
 # Récupération des messages MQTT
-messages = subscribe.simple(mqttTopic + "/light/+/config", hostname=mqttHost, port=mqttPort, msg_count=2)
+#messages = subscribe.simple(mqttTopic + "/light/+/config", hostname=mqttHost, port=mqttPort, msg_count=2)
 # for msg in messages:
 # 	print("%s %s" % (msg.topic, msg.payload))
 
@@ -73,22 +74,39 @@ html = """<!DOCTYPE html>
 	</form>
 	<br />
 	<hr>
-	<br />
+	<br />"""
+if not Mqtt.listConfig:
+	html += "Aucune entité configurée"
+else:
+	html += """
 	Liste des entités configurées :<br /><br />
 	<table>
+		<thead>
+			<tr>
+				<th>Topic</th>
+				<th>Payload</th>
+			</tr>
+		</thead>
+		<tbody>
 	"""
-for msg in messages:
-	payload = json.loads(str(msg.payload, encoding="utf-8"))
-	html += "<tr>"
-	html += "<td>" + str(msg.topic) + "</td><td>" + json.dumps(payload, indent=4).replace(" ", "&nbsp;").replace("\n", "<br />") + "</td>"
-	html += '<td><form action="/init.py" method="post">'
-	html += '<input type="hidden" name="topic" value="' + str(msg.topic) + '" />'
-	html += '<input type="submit" name="suppr" value="Supprimer" />'
-	html += "</form>"
-	html += "</td>"
-	html += "</tr>"
+	#print(Mqtt.listConfig)
+	for topic in Mqtt.listConfig:
+		print(topic)
+
+		payload = json.loads(Mqtt.listConfig[topic])
+		html += "<tr>"
+		html += "<td>" + topic + "</td>"
+		html += "<td>" + json.dumps(payload, indent=4).replace(" ", "&nbsp;").replace("\n", "<br />") + "</td>"
+		html += '<td><form action="/init.py" method="post">'
+		html += '<input type="hidden" name="topic" value="' + str(topic) + '" />'
+		html += '<input type="submit" name="suppr" value="Supprimer" />'
+		html += "</form>"
+		html += "</td>"
+		html += "</tr>"
+	html += """
+		</tbody>
+	</table>"""
 html += """
-	</table>
 </body>
 </html>
 """

@@ -5,8 +5,8 @@ Outil de conversion de l'API de l'IPX800 V4 vers MQTT pour Home Assistant. Perme
 RAF:
 
 - [x] Set brightness des XDimmer
+- [x] Refactoring en classe Python
 - [ ] Initialisation des config dans MQTT
 - [ ] Documentation
-- [ ] Refactoring en classe Python
 - [ ] Gestion des volets roulant
 - [ ] Utilisation d'un login/mot de passe pour le broker MQTT
