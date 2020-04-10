@@ -42,10 +42,12 @@ class Mqtt(Thread):
         urlIpx = 'http://' + self.ipxHost
         topic = str(msg.topic)
         payload = str(msg.payload, encoding="utf-8")
-        #payload = payload[2:-1]
 
         if topic.endswith("config"):
-            Mqtt.listConfig[topic] = payload
+            if payload:
+                Mqtt.listConfig[topic] = payload
+            else:
+                Mqtt.listConfig.pop(topic)
         else:
             relay = topic.replace(self.mqttTopic, '').replace('/light/', '').replace('/switch/', '').replace('/set', '')
             json_data = json.loads(payload)
