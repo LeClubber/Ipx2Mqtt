@@ -5,7 +5,7 @@ Outil de conversion de l'API de l'IPX800 V4 vers MQTT et inversement pour Home A
 Pour chaque relai et dimmer, il faut configurer un push sur chaque entité de l'IPX avec l'URL de ce type :
 
 - <http://ip_serveur:8080/light.py?uid=r17&etat=1> pour les lumières
-- <http://ip_serveur:8080/light.py?uid=r17&etat=1> pour les switch (prises commandées)
+- <http://ip_serveur:8080/switch.py?uid=r17&etat=1> pour les switch (prises commandées)
 
 La configuration des entités peut se faire de 2 façons :
 
