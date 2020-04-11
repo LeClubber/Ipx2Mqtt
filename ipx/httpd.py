@@ -3,6 +3,7 @@
 # @Author: Jérémy BRAUD
 
 import http.server
+import os
 from threading import Thread
 
 # Serveur HTTP
@@ -16,12 +17,11 @@ class Http(Thread):
     def run(self):
         """ Démarrage du service web """
         server_address = ("", self.httpPort)
-
         server = http.server.HTTPServer
         handler = http.server.CGIHTTPRequestHandler
         handler.cgi_directories = ["/"]
+        os.chdir("www")
         affichage = "Server up on port : ", self.httpPort
         print(affichage)
-
         httpd = server(server_address, handler)
         httpd.serve_forever()
