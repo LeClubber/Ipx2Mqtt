@@ -7,6 +7,6 @@ RAF:
 - [x] Set brightness des XDimmer
 - [x] Refactoring en classe Python
 - [x] Initialisation des config dans MQTT
-- [ ] Documentation
+- [ ] Documentation - En cours
 - [ ] Gestion des volets roulant
 - [ ] Utilisation d'un login/mot de passe pour le broker MQTT
