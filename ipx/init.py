@@ -19,6 +19,7 @@ mqttTopic = os.getenv('MQTT_TOPIC', "ipx")
 form = cgi.FieldStorage()
 
 def publish(topic, playload):
+	""" Publication des messages MQTT """
 	client = mqtt.Client()
 	client.connect(mqttHost, mqttPort, 60)
 	client.publish(topic, playload, retain=True)
@@ -29,6 +30,7 @@ def on_message(client, userdata, msg):
 	listConfig[msg.topic] = str(msg.payload, encoding="utf-8")
 
 def loadConfig():
+	""" Récupération des messages MQTT """
 	client = mqtt.Client()
 	client.on_message = on_message
 	client.connect(mqttHost, mqttPort)
