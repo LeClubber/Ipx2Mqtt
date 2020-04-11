@@ -19,10 +19,8 @@ services:
   
   ipx:
     container_name: ipx
-    build: ./ipx
-    # image: leclubber/ipx
-    # volumes:
-      # - ./ipx:/usr/src/ipx
+    image: leclubber/ipx2mqtt
+    # build: ./ipx
     ports:
       - 8080:8080
     environment:
