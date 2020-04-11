@@ -21,7 +21,7 @@ class Http(Thread):
         handler = http.server.CGIHTTPRequestHandler
         handler.cgi_directories = ["/"]
         os.chdir("www")
-        affichage = "Server up on port : ", self.httpPort
+        affichage = "Server up on port : " + str(self.httpPort)
         print(affichage)
         httpd = server(server_address, handler)
         httpd.serve_forever()

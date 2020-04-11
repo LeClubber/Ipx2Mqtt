@@ -27,7 +27,7 @@ def publish(topic, playload):
 
 listConfig = dict()
 def on_message(client, userdata, msg):
-	listConfig[msg.topic] = str(msg.payload, encoding="utf-8")
+	listConfig[str(msg.topic)] = str(msg.payload, encoding="utf-8")
 
 def loadConfig():
 	""" Récupération des messages MQTT """
@@ -77,7 +77,6 @@ elif idRelay and nameRelay:
 		if brightness:
 			payload += ", \"brightness\": true"
 		payload += " }"
-		#print("topic: "+topic+"<br /> payload: "+payload+"<br />")
 		publish(topic, payload)
 	else:
 		html += "<br />Erreur: l'id doit être de forme r01 pour les relais de l'IPX et X8R et d1c1 pour le XDimmer<br /><br /><hr>"
@@ -118,7 +117,7 @@ else:
 		html += "<td>" + topic + "</td>"
 		html += "<td>" + json.dumps(payload, indent=4).replace(" ", "&nbsp;").replace("\n", "<br />") + "</td>"
 		html += '<td><form action="/init.py" method="post">'
-		html += '<input type="hidden" name="topic" value="' + str(topic) + '" />'
+		html += '<input type="hidden" name="topic" value="' + topic + '" />'
 		html += '<input type="submit" name="suppr" value="Supprimer" />'
 		html += "</form>"
 		html += "</td>"
