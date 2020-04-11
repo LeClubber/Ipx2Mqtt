@@ -16,6 +16,19 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 mqtt:
-  broker: mqtt
+  broker: mqtt # ou adresse IP
   discovery: true
   discovery_prefix: ipx
+
+light:
+  - platform: mqtt
+    schema: json
+    name: "Salle d'eau"
+    state_topic: "ipx/light/r19/state"
+    command_topic: "ipx/light/r19/set"
+  - platform: mqtt
+    schema: json
+    name: "Salle à manger"
+    state_topic: "ipx/light/d1c2/state"
+    command_topic: "ipx/light/d1c2/set"
+    brightness: true
