@@ -7,9 +7,8 @@ import cgitb
 import json
 import os
 import paho.mqtt.client as mqtt
-#import paho.mqtt.subscribe as subscribe
 import re
-from mqttd import Mqtt
+from time import sleep
 
 cgitb.enable()
 
@@ -25,22 +24,50 @@ def publish(topic, playload):
 	client.publish(topic, playload, retain=True)
 	client.disconnect()
 
+listConfig = dict()
+def on_message(client, userdata, msg):
+	listConfig[msg.topic] = str(msg.payload, encoding="utf-8")
+
+def loadConfig():
+	client = mqtt.Client()
+	client.on_message = on_message
+	client.connect(mqttHost, mqttPort)
+	client.subscribe(mqttTopic + "/light/+/config")
+	client.subscribe(mqttTopic + "/switch/+/config")
+	client.loop_start()
+	# Attente de reception des messages
+	sleep(2)
+	client.loop_stop()
 
 print("Content-type: text/html; charset=utf-8\n")
 
 # Ajout ou suppression du relay si POST
+confirm = form.getvalue("confirm")
 topic = form.getvalue("topic")
 idRelay = form.getvalue("idRelay")
 nameRelay = form.getvalue("nameRelay")
 brightness = form.getvalue("brightness")
 
-if topic:
-	print("Suppression du topic: "+topic)
+html = """<!DOCTYPE html>
+<head>
+	<title>Config MQTT pour Home-Assistant</title>
+</head>
+<body>
+"""
+
+if confirm:
+	publish(confirm, None)
+elif topic:
+	html += '<br /><form action="/init.py" method="post">'
+	html += "Confirmez-vous la suppression du topic: " + topic + " ?"
+	html += '<input type="hidden" name="confirm" value="' + topic + '" />'
+	html += '<input type="submit" name="suppr" value="Supprimer" />'
+	html += "</form><br /><br /><hr>"
 elif idRelay and nameRelay:
 	if re.match(r"^r[0-9]{2}$", idRelay) and not brightness or re.match(r"^d[0-9]c[0-9]$", idRelay) and brightness:
 		topic = mqttTopic + "/light/" + idRelay + "/config"
 		payload = "{ \"~\": \"" + mqttTopic + "/light/" + idRelay + "\"" # TODO
-		payload += ", \"name\": \"" + str(nameRelay) + "\""
+		payload += ", \"name\": \"" + nameRelay + "\""
 		payload += ", \"unique_id\": \"" + idRelay + "_light\""
 		payload += ", \"command_topic\": \"~/set\""
 		payload += ", \"state_topic\": \"~/state\""
@@ -48,21 +75,15 @@ elif idRelay and nameRelay:
 		if brightness:
 			payload += ", \"brightness\": true"
 		payload += " }"
-		print("topic: "+topic+"<br /> payload: "+payload+"<br />")
-		#publish(topic, payload)
+		#print("topic: "+topic+"<br /> payload: "+payload+"<br />")
+		publish(topic, payload)
 	else:
-		print("Erreur: l'id doit être de forme r01 pour les relais de l'IPX et X8R et d1c1 pour le XDimmer")
+		html += "<br />Erreur: l'id doit être de forme r01 pour les relais de l'IPX et X8R et d1c1 pour le XDimmer<br /><br /><hr>"
 
 # Récupération des messages MQTT
-#messages = subscribe.simple(mqttTopic + "/light/+/config", hostname=mqttHost, port=mqttPort, msg_count=2)
-# for msg in messages:
-# 	print("%s %s" % (msg.topic, msg.payload))
+loadConfig()
 
-html = """<!DOCTYPE html>
-<head>
-	<title>Config MQTT pour Home-Assistant</title>
-</head>
-<body>
+html += """
 	<br />Configuration d'une entité :<br /><br />
 	<form action="/init.py" method="post">
 		<table>
@@ -75,7 +96,7 @@ html = """<!DOCTYPE html>
 	<br />
 	<hr>
 	<br />"""
-if not Mqtt.listConfig:
+if not listConfig:
 	html += "Aucune entité configurée"
 else:
 	html += """
@@ -89,11 +110,8 @@ else:
 		</thead>
 		<tbody>
 	"""
-	#print(Mqtt.listConfig)
-	for topic in Mqtt.listConfig:
-		print(topic)
-
-		payload = json.loads(Mqtt.listConfig[topic])
+	for topic in listConfig:
+		payload = json.loads(listConfig[topic])
 		html += "<tr>"
 		html += "<td>" + topic + "</td>"
 		html += "<td>" + json.dumps(payload, indent=4).replace(" ", "&nbsp;").replace("\n", "<br />") + "</td>"
