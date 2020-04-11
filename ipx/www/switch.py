@@ -18,19 +18,19 @@ etat = form.getvalue("etat")
 brightness = form.getvalue("brightness")
 
 topic = mqttTopic + "/switch/" + uid + "/state"
-playload = '{ ' + '"state": "'
+payload = '{ ' + '"state": "'
 if etat == "0":
-  playload += 'OFF'
+  payload += 'OFF'
 else:
-  playload += 'ON'
-playload += '" }'
+  payload += 'ON'
+payload += '" }'
 
 print("topic: ")
 print(topic)
-print("\nplayload: ")
-print(playload)
+print("\npayload: ")
+print(payload)
 
 client = mqtt.Client()
 client.connect(mqttHost, mqttPort, 60)
-client.publish(topic, playload, retain=True)
+client.publish(topic, payload, retain=True)
 client.disconnect()
