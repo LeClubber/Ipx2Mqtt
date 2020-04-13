@@ -3,6 +3,7 @@ services:
   homeassistant:
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
+    restart: always
     volumes:
       - ./homeassistant:/config
     environment:
@@ -14,12 +15,14 @@ services:
   mqtt:
     container_name: mqtt
     image: eclipse-mosquitto
+    restart: always
     ports:
       - 1883:1883
   
   ipx:
     container_name: ipx
     image: leclubber/ipx2mqtt
+    restart: always
     # build: ./ipx
     ports:
       - 8080:8080
