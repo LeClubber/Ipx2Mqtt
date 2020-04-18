@@ -107,7 +107,8 @@ chmod +x *.py
 - [x] Refactoring en classe Python
 - [x] Initialisation des config dans MQTT
 - [x] Documentation
-- [ ] Publier image Docker en multiple arch
+- [x] Publier image Docker en multiple arch
+- [ ] Tester les paramètres et gestion d'erreur
 - [ ] Update le statut de l'IPX dans MQTT par requête toutes les x secondes (optionnel)
 - [ ] Gestion des volets roulant
 - [ ] Utilisation d'un login/mot de passe pour le broker MQTT

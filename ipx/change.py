@@ -3,8 +3,10 @@
 # @Author: Jérémy BRAUD
 
 import cgi
+import json
 import os
 import paho.mqtt.client as mqtt
+import requests
 from const import Constantes
 from mqttd import Mqtt
 
@@ -23,8 +25,16 @@ if etat == "0":
 else:
   payload += 'ON'
 payload += '"'
-if brightness:
-  payload += ', "brightness": ' + int(int(brightness)*2.55)
+if uid.lower().startswith("d"):
+  if not brightness:
+    dimmer = uid[1:2]
+    channel = uid[3:]
+    # Si la valeur n'est pas renseignée on prend la dernière en statut
+    req = requests.get("http://" + Constantes.ipxHost + "/api/xdevices.json?key=" + Constantes.ipxApiKey + "&Get=G")
+    jsonStatus = json.loads(req.text)
+    numStatus = int(dimmer)*int(channel)
+    brightness = str(jsonStatus['G' + str(numStatus)]['Valeur'])
+  payload += ', "brightness": ' + str(int(int(brightness)*2.55))
 payload += ' }'
 
 print("type: ")
