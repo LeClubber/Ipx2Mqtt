@@ -4,12 +4,14 @@ Outil de conversion de l'API de l'IPX800 V4 vers MQTT et inversement pour Home A
 
 ## Configuration
 
-Pour chaque relai et dimmer, il faut configurer un push sur chaque entité de l'IPX avec l'URL de ce type :
+Pour chaque relai et dimmer, il faut configurer un push sur chaque entité de l'IPX avec l'URL de ce type : <http://ip_serveur:8080/change.py?type=light&uid=r17&etat=1>. L'URL prend les paramètres suivants :
 
-- <http://ip_serveur:8080/light.py?uid=r17&etat=1> pour les lumières
-- <http://ip_serveur:8080/switch.py?uid=r17&etat=1> pour les switch (prises commandées)
-
-Le paramètre uid correspond à l'id donné au relai. Il correspont de r01 à r56 aux 56 relais possible de l'IPX, et de d1c1 à d4c4 pour les XDimmer (dimmer n°1 et channel n°1 au dimmer n°4 et channel n°4). L'état est à 0 pour éteint et 1 pour allumé.
+- type : soit
+  - light : pour la gestion des lumières
+  - switch : pour les switch (prises commandées)
+  - shutter : pour les volets roulant (à venir)
+- uid : L'id donné au relai. Il correspont de r01 à r56 aux 56 relais possible de l'IPX, et de d1c1 à d4c4 pour les XDimmer (dimmer n°1 et channel n°1 au dimmer n°4 et channel n°4)
+- etat : 0 pour éteint et 1 pour allumé
 
 La configuration des entités peut se faire de 2 façons :
 
@@ -104,7 +106,8 @@ chmod +x *.py
 - [x] Set brightness des XDimmer
 - [x] Refactoring en classe Python
 - [x] Initialisation des config dans MQTT
-- [ ] Documentation - En cours
+- [x] Documentation
+- [ ] Publier image Docker en multiple arch
 - [ ] Update le statut de l'IPX dans MQTT par requête toutes les x secondes (optionnel)
 - [ ] Gestion des volets roulant
 - [ ] Utilisation d'un login/mot de passe pour le broker MQTT

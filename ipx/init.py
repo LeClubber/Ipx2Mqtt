@@ -8,22 +8,13 @@ import json
 import os
 import paho.mqtt.client as mqtt
 import re
+from const import Constantes
+from mqttd import Mqtt
 from time import sleep
 
 cgitb.enable()
 
-mqttPort = int(os.getenv('MQTT_PORT', 1883))
-mqttHost = os.getenv('MQTT_HOST', "localhost")
-mqttTopic = os.getenv('MQTT_TOPIC', "ipx")
-
 form = cgi.FieldStorage()
-
-def publish(topic, playload):
-	""" Publication des messages MQTT """
-	client = mqtt.Client()
-	client.connect(mqttHost, mqttPort, 60)
-	client.publish(topic, playload, retain=True)
-	client.disconnect()
 
 listConfig = dict()
 def on_message(client, userdata, msg):
@@ -33,12 +24,12 @@ def loadConfig():
 	""" Récupération des messages MQTT """
 	client = mqtt.Client()
 	client.on_message = on_message
-	client.connect(mqttHost, mqttPort)
-	client.subscribe(mqttTopic + "/light/+/config")
-	client.subscribe(mqttTopic + "/switch/+/config")
+	client.connect(Constantes.mqttHost, Constantes.mqttPort)
+	client.subscribe(Constantes.mqttTopic + "/light/+/config")
+	client.subscribe(Constantes.mqttTopic + "/switch/+/config")
 	client.loop_start()
 	# Attente de reception des messages
-	sleep(2)
+	sleep(1)
 	client.loop_stop()
 
 print("Content-type: text/html; charset=utf-8\n")
@@ -58,7 +49,7 @@ html = """<!DOCTYPE html>
 """
 
 if confirm:
-	publish(confirm, None)
+	Mqtt.publish(confirm, None, True)
 elif topic:
 	html += '<br /><form action="/init.py" method="post">'
 	html += "Confirmez-vous la suppression du topic: " + topic + " ?"
@@ -67,8 +58,8 @@ elif topic:
 	html += "</form><br /><br /><hr>"
 elif idRelay and nameRelay:
 	if re.match(r"^r[0-9]{2}$", idRelay) and not brightness or re.match(r"^d[0-9]c[0-9]$", idRelay) and brightness:
-		topic = mqttTopic + "/light/" + idRelay + "/config"
-		payload = "{ \"~\": \"" + mqttTopic + "/light/" + idRelay + "\"" # TODO
+		topic = Constantes.mqttTopic + "/light/" + idRelay + "/config"
+		payload = "{ \"~\": \"" + Constantes.mqttTopic + "/light/" + idRelay + "\"" # TODO
 		payload += ", \"name\": \"" + nameRelay + "\""
 		payload += ", \"unique_id\": \"" + idRelay + "_light\""
 		payload += ", \"command_topic\": \"~/set\""
@@ -77,7 +68,7 @@ elif idRelay and nameRelay:
 		if brightness:
 			payload += ", \"brightness\": true"
 		payload += " }"
-		publish(topic, payload)
+		Mqtt.publish(topic, payload, True)
 	else:
 		html += "<br />Erreur: l'id doit être de forme r01 pour les relais de l'IPX et X8R et d1c1 pour le XDimmer<br /><br /><hr>"
 
@@ -111,7 +102,7 @@ else:
 		</thead>
 		<tbody>
 	"""
-	for topic in listConfig:
+	for topic in sorted(listConfig.keys()):
 		payload = json.loads(listConfig[topic])
 		html += "<tr>"
 		html += "<td>" + topic + "</td>"

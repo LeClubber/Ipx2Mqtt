@@ -4,24 +4,23 @@
 
 import http.server
 import os
+from const import Constantes
 from threading import Thread
 
 # Serveur HTTP
 class Http(Thread):
     """ Thread chargé de distribuer des pages web """
 
-    def __init__(self, httpPort):
+    def __init__(self):
         Thread.__init__(self)
-        self.httpPort = httpPort
 
     def run(self):
         """ Démarrage du service web """
-        server_address = ("", self.httpPort)
+        server_address = ("", Constantes.httpPort)
         server = http.server.HTTPServer
         handler = http.server.CGIHTTPRequestHandler
         handler.cgi_directories = ["/"]
-        os.chdir("www")
-        affichage = "Server up on port : " + str(self.httpPort)
+        affichage = "Server up on port : " + str(Constantes.httpPort)
         print(affichage)
         httpd = server(server_address, handler)
         httpd.serve_forever()

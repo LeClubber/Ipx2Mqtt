@@ -5,19 +5,18 @@
 import cgi
 import os
 import paho.mqtt.client as mqtt
-
-mqttPort = int(os.getenv('MQTT_PORT', 1883))
-mqttHost = os.getenv('MQTT_HOST', "localhost")
-mqttTopic = os.getenv('MQTT_TOPIC', "ipx")
+from const import Constantes
+from mqttd import Mqtt
 
 form = cgi.FieldStorage()
 print("Content-type: text/plain; charset=utf-8\n")
 
+change = form.getvalue("type")
 uid = form.getvalue("uid")
 etat = form.getvalue("etat")
 brightness = form.getvalue("brightness")
 
-topic = mqttTopic + "/light/" + uid + "/state"
+topic = Constantes.mqttTopic + "/" + change + "/" + uid + "/state"
 payload = '{ ' + '"state": "'
 if etat == "0":
   payload += 'OFF'
@@ -28,12 +27,11 @@ if brightness:
   payload += ', "brightness": ' + int(int(brightness)*2.55)
 payload += ' }'
 
-print("topic: ")
+print("type: ")
+print(change)
+print("\ntopic: ")
 print(topic)
 print("\npayload: ")
 print(payload)
 
-client = mqtt.Client()
-client.connect(mqttHost, mqttPort, 60)
-client.publish(topic, payload, retain=True)
-client.disconnect()
+Mqtt.publish(topic, payload, True)

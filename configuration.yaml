@@ -24,11 +24,13 @@ light:
   - platform: mqtt
     schema: json
     name: "Salle d'eau"
+    unique_id: r19
     state_topic: "ipx/light/r19/state"
     command_topic: "ipx/light/r19/set"
   - platform: mqtt
     schema: json
     name: "Salle à manger"
+    unique_id: d1c2
     state_topic: "ipx/light/d1c2/state"
     command_topic: "ipx/light/d1c2/set"
     brightness: true

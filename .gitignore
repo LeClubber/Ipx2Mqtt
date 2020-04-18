@@ -2,3 +2,4 @@
 .vscode
 homeassistant
 test.py
+__pycache__
