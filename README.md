@@ -1,8 +1,20 @@
 # Ipx2Mqtt
 
-Outil de conversion de l'API de l'IPX800 V4 vers MQTT et inversement pour Home Assistant. Permet d'utiliser les éléments de type 'light' et 'switch' à partir des relais de l'IPX ou des modules X8R ainsi que des modules XDimmer.
+Outil de conversion de l'API de l'IPX800 V4 vers MQTT et inversement pour Home Assistant. Permet d'utiliser les éléments de type "light" et "switch" à partir des relais de l'IPX ou des modules X8R ainsi que des modules XDimmer.
 
 ## Configuration
+
+La configuration des entités peut se faire de 2 façons :
+
+- Par le fichier de configuration [configuration.yaml](configuration.yaml) (voir exemple light)
+- Par l'URL <http://ip_serveur:8080/init.py> qui va enregistrer dans MQTT la configuration
+
+Pour que Home Assistant récupère l'état de l'IPX, il y a deux solutions :
+
+- Par push avec une URL depuis l'IPX à chaque changement d'état
+- Par requêtes du serveur à l'IPX
+
+### Push
 
 Pour chaque relai et dimmer, il faut configurer un push sur chaque entité de l'IPX avec l'URL de ce type : <http://ip_serveur:8080/change.py?type=light&uid=r17&etat=1>. L'URL prend les paramètres suivants :
 
@@ -13,10 +25,9 @@ Pour chaque relai et dimmer, il faut configurer un push sur chaque entité de l'
 - uid : L'id donné au relai. Il correspont de r01 à r56 aux 56 relais possible de l'IPX, et de d1c1 à d4c4 pour les XDimmer (dimmer n°1 et channel n°1 au dimmer n°4 et channel n°4)
 - etat : 0 pour éteint et 1 pour allumé
 
-La configuration des entités peut se faire de 2 façons :
+### Requête
 
-- Par le fichier de configuration [configuration.yaml](configuration.yaml) (voir exemple light)
-- Par l'URL <http://ip_serveur:8080/init.py> qui va enregistrer dans MQTT la configuration
+Il suffit de renseigner la variable d'environnement IPX_PULL_STATUS et d'indiquer les relais et dimmer à utiliser (voir variable d'environnement). Le serveur se charge de récupérer l'état de tous les éléments.
 
 ## Déploiement
 
@@ -26,7 +37,7 @@ Il vous faut :
 - Un brocker (serveur) MQTT (non sécurisé, sans login/mot de passe pour l'instant)
 - Le service Ipx2Mqtt
 
-Il y a deux solutions pour déployer ce cervice :
+Il y a deux solutions pour déployer ce service :
 
 - Docker (recommandé)
 - Exécuter le script python directement
@@ -74,6 +85,13 @@ Les variables d'environnement sont optionnelles, elles possèdent une valeur par
 - IPX_LOGIN (admin par défaut)
 - IPX_PASSWORD (password par défaut)
 
+Pour récupérer les statuts depuis l'IPX automatiquement, il faut aussi renseigner les variables d'environnement suivantes :
+
+- IPX_PULL_STATUS (0 par défaut) : en secondes le temps entre chaque requête
+- IPX_RELAY_LIGHT : les relais de type "light"
+- IPX_RELAY_SWITCH : les relais de type "switch"
+- IPX_DIMMER : les dimmers à prendre en charge
+
 Un fichier [docker-compose.yml](docker-compose.yml) est disponible pour exemple, avec toutes les variables d'environnement ainsi que les services homeassistant et mqtt.
 
 Une fois votre fichier docker-compose.yml réalisé, il faut lancer la commande suivante pour démarrer le ou les services configurés :
@@ -108,7 +126,7 @@ chmod +x *.py
 - [x] Initialisation des config dans MQTT
 - [x] Documentation
 - [x] Publier image Docker en multiple arch
+- [x] Update le statut de l'IPX dans MQTT par requête toutes les x secondes (optionnel)
 - [ ] Tester les paramètres et gestion d'erreur
-- [ ] Update le statut de l'IPX dans MQTT par requête toutes les x secondes (optionnel)
 - [ ] Gestion des volets roulant
 - [ ] Utilisation d'un login/mot de passe pour le broker MQTT

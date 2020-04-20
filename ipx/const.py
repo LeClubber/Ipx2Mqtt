@@ -18,3 +18,6 @@ class Constantes():
     ipxLogin = os.getenv("IPX_LOGIN", "admin")
     ipxPassword = os.getenv("IPX_PASSWORD", "password")
     ipxPullStatus = int(os.getenv("IPX_PULL_STATUS", 0))
+    ipxDimmerLightStatus = os.getenv("IPX_DIMMER")
+    ipxRelayLightStatus = os.getenv("IPX_RELAY_LIGHT")
+    ipxRelaySwitchStatus = os.getenv("IPX_RELAY_SWITCH")

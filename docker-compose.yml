@@ -35,4 +35,8 @@ services:
       - IPX_API_KEY=apikey
       - IPX_LOGIN=admin
       - IPX_PASSWORD=password
+      - IPX_PULL_STATUS=3
+      - IPX_RELAY_LIGHT=17-19,25
+      - IPX_RELAY_SWITCH=50-53
+      - IPX_DIMMER=d1c1,d1c2
 
