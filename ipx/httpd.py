@@ -8,7 +8,7 @@ from const import Constantes
 from threading import Thread
 
 # Serveur HTTP
-class Http(Thread):
+class Httpd(Thread):
     """ Thread chargé de distribuer des pages web """
 
     def __init__(self):

@@ -8,7 +8,7 @@ import os
 import paho.mqtt.client as mqtt
 import requests
 from const import Constantes
-from mqttd import Mqtt
+from mqtt import Mqtt
 
 form = cgi.FieldStorage()
 print("Content-type: text/plain; charset=utf-8\n")

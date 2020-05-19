@@ -2,13 +2,17 @@
 # -*- coding: utf-8 -*-
 # @Author: Jérémy BRAUD
 
-from httpd import Http
-from mqttd import Mqtt
+from const import Constantes
+from httpd import Httpd
+from mqtt import Mqtt2Ipx
+from mqtt import Mqtt
 
 # Création des threads
-mqttd = Mqtt()
-httpd = Http()
+httpd = Httpd()
+mqtt2ipx = Mqtt2Ipx()
 
 # Lancement des threads
-mqttd.start()
 httpd.start()
+mqtt2ipx.start()
+Mqtt.ipxPullStatus()
+
