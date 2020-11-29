@@ -32,7 +32,7 @@ if uid.lower().startswith("d"):
     # Si la valeur n'est pas renseignée on prend la dernière en statut
     req = requests.get("http://" + Constantes.ipxHost + "/api/xdevices.json?key=" + Constantes.ipxApiKey + "&Get=G")
     jsonStatus = json.loads(req.text)
-    numStatus = int(dimmer)*int(channel)
+    numStatus = (int(dimmer)-1)*4+int(channel)
     brightness = str(jsonStatus['G' + str(numStatus)]['Valeur'])
   payload += ', "brightness": ' + str(int(int(brightness)*2.55))
 payload += ' }'

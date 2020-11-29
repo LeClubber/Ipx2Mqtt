@@ -49,7 +49,7 @@ class Mqtt2Ipx(Thread):
                     # Si la valeur n'est pas renseignée on prend la dernière en statut
                     req = requests.get("http://" + Constantes.ipxHost + "/api/xdevices.json?key=" + Constantes.ipxApiKey + "&Get=G")
                     jsonStatus = json.loads(req.text)
-                    numStatus = int(dimmer)*int(channel)
+                    numStatus = (int(dimmer)-1)*4+int(channel)
                     brightness = str(jsonStatus['G' + str(numStatus)]['Valeur'])
                 urlIpx += brightness
         else:
@@ -153,7 +153,7 @@ class Ipx2Mqtt(Thread):
             for dimmer in self.listDimmer:
                 numDimmer = dimmer[1:2]
                 numChannel = dimmer[3:]
-                numStatus = int(numDimmer)*int(numChannel)
+                numStatus = (int(numDimmer)-1)*4+int(numChannel)
                 state = str(jsonStatus['G' + str(numStatus)]['Etat'])
                 brightness = str(jsonStatus['G' + str(numStatus)]['Valeur'])
                 topic = self.getTopic("light", dimmer, "state")
