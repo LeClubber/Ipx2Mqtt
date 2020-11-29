@@ -127,6 +127,7 @@ chmod +x *.py
 - [x] Documentation
 - [x] Publier image Docker en multiple arch
 - [x] Update le statut de l'IPX dans MQTT par requête toutes les x secondes (optionnel)
+- [ ] Attente du serveur MQTT si non disponible
 - [ ] Tester les paramètres et gestion d'erreur
 - [ ] Gestion des volets roulant
 - [ ] Utilisation d'un login/mot de passe pour le broker MQTT
