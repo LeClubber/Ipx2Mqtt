@@ -3,6 +3,7 @@ services:
   homeassistant:
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
+    privileged: true
     restart: always
     volumes:
       - ./homeassistant:/config
@@ -22,6 +23,7 @@ services:
   ipx:
     container_name: ipx
     image: leclubber/ipx2mqtt
+    privileged: true
     restart: always
     # build: ./ipx
     ports:
