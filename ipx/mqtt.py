@@ -66,6 +66,8 @@ class Mqtt2Ipx(Thread):
     def run(self):
         """ Démarrage du service MQTT """
         client = mqtt.Client()
+        if Constantes.mqttUser:
+            client.username_pw_set(Constantes.mqttUser, Constantes.mqttPassword)
         client.on_connect = self.on_connect
         client.on_message = self.on_message
         client.connect(Constantes.mqttHost, Constantes.mqttPort, 60)
@@ -77,6 +79,8 @@ class Mqtt():
     def publish(topic, playload, retain=True):
         """ Publication des messages MQTT """
         client = mqtt.Client()
+        if Constantes.mqttUser:
+            client.username_pw_set(Constantes.mqttUser, Constantes.mqttPassword)
         client.connect(Constantes.mqttHost, Constantes.mqttPort, 60)
         client.publish(topic, playload, retain=retain)
         client.disconnect()

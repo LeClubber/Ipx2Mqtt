@@ -80,6 +80,8 @@ Les variables d'environnement sont optionnelles, elles possèdent une valeur par
 - MQTT_PORT (1883 par défaut)
 - MQTT_HOST (localhost par défaut)
 - MQTT_TOPIC (ipx par défaut)
+- MQTT_USER (aucun par défaut)
+- MQTT_PASSWORD (aucun par défaut)
 - IPX_HOST (192.168.1.1 par défaut)
 - IPX_API_KEY (apikey par défaut)
 - IPX_LOGIN (admin par défaut)
@@ -127,7 +129,7 @@ chmod +x *.py
 - [x] Documentation
 - [x] Publier image Docker en multiple arch
 - [x] Update le statut de l'IPX dans MQTT par requête toutes les x secondes (optionnel)
+- [x] Utilisation d'un login/mot de passe pour le broker MQTT
 - [ ] Attente du serveur MQTT si non disponible
 - [ ] Tester les paramètres et gestion d'erreur
 - [ ] Gestion des volets roulant
-- [ ] Utilisation d'un login/mot de passe pour le broker MQTT
